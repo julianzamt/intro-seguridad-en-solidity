@@ -9,7 +9,7 @@ interface ISavingsAccount {
     function withdraw() external;
 }
 
-contract Investor is Ownable {
+contract InvestorV2 is Ownable {
     ISavingsAccount public immutable savingsAccount;
 
     constructor(address savingsAccountAddress) {
@@ -24,5 +24,7 @@ contract Investor is Ownable {
         savingsAccount.withdraw();
     }
 
-    receive() external payable {}
+    receive() external payable {
+        payable(owner()).transfer(address(this).balance);
+    }
 }

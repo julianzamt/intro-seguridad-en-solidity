@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Auction is Ownable, ReentrancyGuard {
-  using Address for address payable;
+contract Auction is Ownable {
 
   address payable public currentLeader;
   uint256 public highestBid;
@@ -18,7 +15,7 @@ contract Auction is Ownable, ReentrancyGuard {
 
   Refund[] public refunds;
 
-  function bid() external payable nonReentrant {
+  function bid() external payable {
     require(msg.value > highestBid, "Bid not high enough");
 
     if (currentLeader != address(0)) {
@@ -29,9 +26,9 @@ contract Auction is Ownable, ReentrancyGuard {
     highestBid = msg.value;
   }
 
-  function refundAll() external onlyOwner nonReentrant {
+  function refundAll() external onlyOwner {
     for (uint256 i; i < refunds.length; i++) {
-      refunds[i].addr.sendValue(refunds[i].amount);
+      refunds[i].addr.transfer(refunds[i].amount);
     }
     delete refunds;
   }

@@ -7,7 +7,10 @@ describe("SavingsAccount", function () {
   beforeEach(async function () {
     [deployer, user] = await ethers.getSigners();
 
-    const SavingsAccount = await ethers.getContractFactory("SavingsAccount", deployer);
+    const SavingsAccount = await ethers.getContractFactory(
+      "SavingsAccount",
+      deployer
+    );
     this.savingsAccount = await SavingsAccount.deploy();
 
     const Investor = await ethers.getContractFactory("Investor", deployer);
@@ -38,23 +41,33 @@ describe("SavingsAccount", function () {
 
   describe("From a Contract", function () {
     it("Should be possible to deposit", async function () {
-      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(0);
+      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(
+        0
+      );
 
       await this.investor.depositIntoSavingsAccount({ value: 100 });
 
-      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(100);
+      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(
+        100
+      );
     });
 
     it("Should be possible to withdraw", async function () {
-      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(0);
+      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(
+        0
+      );
 
       await this.investor.depositIntoSavingsAccount({ value: 100 });
 
-      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(100);
+      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(
+        100
+      );
 
       await this.investor.withdrawFromSavingsAccount();
 
-      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(0);
+      expect(await this.savingsAccount.balanceOf(this.investor.address)).to.eq(
+        0
+      );
     });
   });
 });

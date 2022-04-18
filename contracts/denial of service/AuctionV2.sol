@@ -1,19 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract AuctionV2 is ReentrancyGuard {
-  using Address for address payable;
-
+contract AuctionV2 {
   address payable public currentLeader;
   uint256 public highestBid;
 
   mapping(address => uint256) public refunds;
 
-  function bid() external payable nonReentrant {
+  function bid() external payable {
     require(msg.value > highestBid, "Bid not high enough");
+    require(refunds[msg.sender] != 0, "Withdraw your refund first");
 
     if (currentLeader != address(0)) {
       refunds[currentLeader] += highestBid;
@@ -23,10 +21,11 @@ contract AuctionV2 is ReentrancyGuard {
     highestBid = msg.value;
   }
 
-  function withdrawRefund() external nonReentrant {
+  // Pull over push Pattern
+  function withdrawRefund() external {
     uint256 refund = refunds[msg.sender];
     refunds[msg.sender] = 0;
 
-    payable(msg.sender).sendValue(refund);
+    payable(msg.sender).transfer(refund);
   }
 }

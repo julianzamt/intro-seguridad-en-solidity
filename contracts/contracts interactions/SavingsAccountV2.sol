@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-contract SavingsAccount {
+// import "@openzeppelin/contracts/utils/Address.sol";
+
+contract SavingsAccountV2 {
+  // using Address for address payable;
 
   mapping(address => uint256) public balanceOf;
 
@@ -14,6 +17,7 @@ contract SavingsAccount {
 
     balanceOf[msg.sender] = 0;
 
-    payable(msg.sender).transfer(amountDeposited);
+    payable(msg.sender).call{ value: amountDeposited }("");
+    // payable(msg.sender).sendValue(amountDeposited);
   }
 }
